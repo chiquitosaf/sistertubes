@@ -11,16 +11,18 @@ port = 1883
 # Flag to control the loop
 exit_flag = False
 
-def on_message(client, userdata, message):
-    print(f"Received schedule for {message.topic}: {message.payload.decode()}")
 
-def subscribe_to_station(station_topic):
+def on_message(client, userdata, message):
+    print(f"Menerima topic {message.topic}: {message.payload.decode()}")
+
+
+def subscribe_to_station(jadwal_topic, posisi_topic):
     client = mqtt.Client()
 
     try:
         client.connect(broker_address, port)
         client.on_message = on_message
-        client.subscribe(station_topic)
+        client.subscribe([(jadwal_topic, 1), (posisi_topic, 1)])
         client.loop_start()
 
         while not exit_flag:
@@ -32,20 +34,22 @@ def subscribe_to_station(station_topic):
     finally:
         client.loop_stop()
 
+
 def passenger_ui():
-    print("Welcome, Passenger!")
-    print("Available stations: station1, station2, station3")
+    print("Selamat datang, penumpang!")
+    print("Jadwal kereta apa yang mau kamu lihat?")
 
-    station_choice = input("Enter station code to view schedule: ")
-    station_topic = f"stations/{station_choice}"
+    train_choice = input("Masukkan nama kereta: ")
+    jadwal_topic = f"jadwal_kereta/{train_choice}"
+    posisi_topic = f"posisi_kereta/{train_choice}"
 
-    print("Press ctrl+c if you want to exit")
-    print(f"Subscribed to {station_choice} station schedule...")
+    print("\nTekan CTRL + C untuk keluar\n")
 
     try:
-        subscribe_to_station(station_topic)
+        subscribe_to_station(jadwal_topic, posisi_topic)
     except KeyboardInterrupt:
         print("\nExiting...")
+
 
 if __name__ == "__main__":
     try:

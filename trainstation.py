@@ -1,8 +1,8 @@
 import paho.mqtt.client as mqtt
 
 # MQTT Broker details
-broker_address = "127.0.0.1"
-port = 9000
+broker_address = "192.168.1.5"
+port = 1883
 
 def publish_schedule(station_topic, schedule):
     client = mqtt.Client()

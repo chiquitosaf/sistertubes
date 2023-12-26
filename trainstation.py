@@ -46,6 +46,7 @@ def station_master_ui():
                     publish_schedule(posisi_topic, posisi_kereta)
                 else:
                     print("Sampai Jumpa!")
+                    break
         else:
             print("Invalid password. Please try again.")
     else:
